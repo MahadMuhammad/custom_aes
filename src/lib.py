@@ -45,3 +45,35 @@ def substitute_nibbles(plainTextBinary: str) -> list:
         hexValues.append(hexValue)
 
     return hexValues
+
+
+def shift_rows(plainTextBinary: str) -> list:
+    """
+    performing shift row operation
+    """
+    # converting into nibbles for ease
+    nibbles = [plainTextBinary[i : i + 4] for i in range(0, len(plainTextBinary), 4)]
+    nibbles[0], nibbles[2] = nibbles[2], nibbles[0]
+
+    # now. again converting into binary
+    binaryValues: list = list()
+    for value in nibbles:
+        hexValue = hex(int(value, 2))[2:]
+        binaryValues.append(hexValue)
+
+    return binaryValues
+
+
+def validate_plain_text(plaintext: str) -> None:
+    """
+    Validate the plain text input
+    """
+    # 16 bits of input data
+    # See this for more details: https://en.wikipedia.org/wiki/Nibble
+    if len(plaintext) > 4:
+        raise ValueError("The input should be less than or equal to 4 characters long")
+    elif len(plaintext) < 4:
+        # Padding the input with zeros
+        plaintext = plaintext.ljust(4, "0")
+
+    assert len(plaintext) == 4
