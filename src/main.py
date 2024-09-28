@@ -3,7 +3,7 @@ Implementation of a custom AES algorithm variant named 'Pocket Algorithm'
 developed for my Information Security course.
 """
 
-from lib import substitute_nibbles, validate_plain_text, shift_rows
+from lib import substitute_nibbles, validate_plain_text, shift_rows, mix_columns
 
 
 def main() -> None:
@@ -26,6 +26,12 @@ def main() -> None:
     shiftRow = shift_rows(plainTextBinary)
     shiftRowString = "".join(shiftRow)
     print(f"ShiftRows({plaintext}) = {shiftRowString}")
+
+    # (3) MixColumns
+    # here, not sending the binary value, as it is not required
+    mixCols = mix_columns(plainTextBinary)
+    mixColsString = "".join(mixCols)
+    print(f"MixColumns({plaintext}) = {mixColsString}")
 
 
 if __name__ == "__main__":

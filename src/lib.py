@@ -64,6 +64,54 @@ def shift_rows(plainTextBinary: str) -> list:
     return binaryValues
 
 
+def mix_columns(plainTextBinary: str) -> list:
+    nibbles = [
+        int(plainTextBinary[i : i + 4], 2) for i in range(0, len(plainTextBinary), 4)
+    ]
+
+    constant_matrix = [
+        [1, 4],
+        [4, 1],
+    ]
+
+    d0 = finite_field_multiply(
+        (nibbles[0]), constant_matrix[0][0]
+    ) ^ finite_field_multiply((nibbles[1]), constant_matrix[0][1])
+    d1 = finite_field_multiply(
+        (nibbles[0]), constant_matrix[1][0]
+    ) ^ finite_field_multiply((nibbles[1]), constant_matrix[1][1])
+    d2 = finite_field_multiply(
+        (nibbles[2]), constant_matrix[0][0]
+    ) ^ finite_field_multiply((nibbles[3]), constant_matrix[0][1])
+    d3 = finite_field_multiply(
+        (nibbles[2]), constant_matrix[1][0]
+    ) ^ finite_field_multiply((nibbles[3]), constant_matrix[1][1])
+
+    mixedCols: list = [hex(x)[2:] for x in [d0, d1, d2, d3]]
+
+    return mixedCols
+
+
+def finite_field_multiply(a: int, b: int):
+    """
+    finite field GF(2^4)
+    """
+    m = 0
+
+    while b > 0:
+        # checking the lsb of b
+        if b & 1 == 1:
+            m ^= a
+        a <<= 1
+
+        # checking if fourth bit is set
+        if a & 0b10000:
+            a ^= 0b10011
+        b >>= 1
+
+    return m
+
+
 def validate_plain_text(plaintext: str) -> None:
     """
     Validate the plain text input
