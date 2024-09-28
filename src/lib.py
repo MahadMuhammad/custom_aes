@@ -112,6 +112,67 @@ def finite_field_multiply(a: int, b: int):
     return m
 
 
+def gen_round_keys(binaryKey: str) -> tuple:
+    # constants
+    from typing import Final
+
+    Rcon_1: Final[str] = "1110"
+    Rcon_2: Final[str] = "1010"
+
+    rk1 = list()
+    rk2 = list()
+
+    bkmatrix = [binaryKey[i : i + 4] for i in range(0, len(binaryKey), 4)]
+
+    rk1.append(
+        bitwise_xor(
+            bitwise_xor(
+                bkmatrix[0],
+                bin(int(substitute_nibbles(bkmatrix[3])[0], 16))[2:].zfill(4),
+            ),
+            Rcon_1,
+        )
+    )
+    for i in range(0, 3):
+        rk1.append(bitwise_xor(bkmatrix[i + 1], rk1[i]))
+
+    rk2.append(
+        bitwise_xor(
+            bitwise_xor(
+                rk1[0],
+                bin(int(substitute_nibbles(rk1[3])[0], 16))[2:].zfill(4),
+            ),
+            Rcon_2,
+        )
+    )
+    for i in range(0, 3):
+        rk2.append(bitwise_xor(rk1[i + 1], rk2[i]))
+
+    return rk1, rk2
+
+
+def bitwise_xor(a, b):
+    if len(a) != len(b):
+        raise ValueError("strings must have the same length for XOR operation")
+
+    result = str()
+    for bit1, bit2 in zip(a, b):
+        result += "1" if bit1 != bit2 else "0"
+
+    return result
+
+
+# a slite redundancy in the code
+def validate_key(key: str) -> None:
+    if len(key) > 4:
+        raise ValueError("The input should be less than or equal to 4 characters long")
+    elif len(key) < 4:
+        # Padding the input with zeros
+        key = key.ljust(4, "0")
+
+    assert len(key) == 4
+
+
 def validate_plain_text(plaintext: str) -> None:
     """
     Validate the plain text input
