@@ -49,7 +49,7 @@ def encryption():
     Experimenting
     performing encryption
     """
-    plainText = "Gentlemen, you can't fight in here. This is the war room."
+    plainText = "Hello there"
     # make pair of 2 characters and if not pair add null padding
     if len(plainText) % 2 != 0:
         plainText += "\0"
@@ -89,6 +89,7 @@ def main():
     # decrypting the ciphertext
     plainText = str()
     for block in file_data.split(" "):
+        # please remove any white spaces from secret.txt if any
         cipherTextBinary: str = bin(int(block, 16))[2:].zfill(16)
         plainTextHex = perform_decryption(cipherTextBinary, keyBinary)
         plainText += bytes.fromhex(plainTextHex).decode("utf-8")
