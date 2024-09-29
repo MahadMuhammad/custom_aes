@@ -22,10 +22,46 @@ sBox: dict = {
     "1111": "1000",
 }
 
+inverseSBox: dict = {v: k for k, v in sBox.items()}
+
 constant_matrix = [
     [1, 4],
     [4, 1],
 ]
+
+# According to GF(24) rules, the inverse is
+inverse_constant_matrix = [[9, 2], [2, 9]]
+
+# constants
+from typing import Final
+
+Rcon_1: Final[str] = "1110"
+Rcon_2: Final[str] = "1010"
+
+
+def substitute_nibbles_inverse(plainTextBinary: str) -> list:
+    """
+    substituting each nibble in the block with a different one
+    """
+
+    subNibbles: list[str] = list()
+    if len(plainTextBinary) == 4:
+        # input is a 4 bit nibble
+        subNibbles.append(inverseSBox[plainTextBinary])
+    elif len(plainTextBinary) == 16:
+        # splitting into 4 bit nibbles
+        for i in range(0, 16, 4):
+            subNibbles.append(inverseSBox[plainTextBinary[i : i + 4]])
+    else:
+        raise ValueError("Invalid must be either 4 or 16 bits long")
+
+    hexValues: list = list()
+
+    for binaryValue in subNibbles:
+        hexValue = hex(int(binaryValue, 2))[2:]
+        hexValues.append(hexValue)
+
+    return hexValues
 
 
 def substitute_nibbles(plainTextBinary: str) -> list:
@@ -93,6 +129,30 @@ def mix_columns(plainTextBinary: str) -> list:
     return mixedCols
 
 
+def mix_columns_reverse(plainTextBinary: str) -> list:
+    plainTextBinary = bin(int(plainTextBinary, 16))[2:].zfill(16)
+    nibbles = [
+        int(plainTextBinary[i : i + 4], 2) for i in range(0, len(plainTextBinary), 4)
+    ]
+
+    d0 = finite_field_multiply(
+        (nibbles[0]), inverse_constant_matrix[0][0]
+    ) ^ finite_field_multiply((nibbles[1]), inverse_constant_matrix[0][1])
+    d1 = finite_field_multiply(
+        (nibbles[0]), inverse_constant_matrix[1][0]
+    ) ^ finite_field_multiply((nibbles[1]), inverse_constant_matrix[1][1])
+    d2 = finite_field_multiply(
+        (nibbles[2]), inverse_constant_matrix[0][0]
+    ) ^ finite_field_multiply((nibbles[3]), inverse_constant_matrix[0][1])
+    d3 = finite_field_multiply(
+        (nibbles[2]), inverse_constant_matrix[1][0]
+    ) ^ finite_field_multiply((nibbles[3]), inverse_constant_matrix[1][1])
+
+    mixedCols: list = [hex(x)[2:] for x in [d0, d1, d2, d3]]
+
+    return mixedCols
+
+
 def finite_field_multiply(a: int, b: int):
     """
     finite field GF(2^4)
@@ -114,11 +174,6 @@ def finite_field_multiply(a: int, b: int):
 
 
 def gen_round_keys(binaryKey: str) -> tuple:
-    # constants
-    from typing import Final
-
-    Rcon_1: Final[str] = "1110"
-    Rcon_2: Final[str] = "1010"
 
     rk1 = list()
     rk2 = list()

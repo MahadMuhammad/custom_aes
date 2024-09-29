@@ -4,7 +4,7 @@ developed for my Information Security course.
 """
 
 from lib import (
-    substitute_nibbles,
+    substitute_nibbles_inverse,
     validate_text,
     shift_rows,
     mix_columns,
@@ -24,7 +24,7 @@ def main() -> None:
     plainTextBinary: str = bin(int(plaintext, 16))[2:]
 
     # (1) SubNibbles
-    sub_nibbles = substitute_nibbles(plainTextBinary)
+    sub_nibbles = substitute_nibbles_inverse(plainTextBinary)
     subnibblesString = "".join(sub_nibbles)
     subnibblesBinary = bin(int(subnibblesString, 16))[2:]
     print(f"SubNibbles({plaintext}) = {subnibblesString}")
