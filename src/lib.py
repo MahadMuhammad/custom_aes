@@ -2,30 +2,36 @@
 functions used in the main program
 """
 
+# From the given document
+sBox: dict = {
+    "0000": "1010",
+    "0001": "0000",
+    "0010": "1001",
+    "0011": "1110",
+    "0100": "0110",
+    "0101": "0011",
+    "0110": "1111",
+    "0111": "0101",
+    "1000": "0001",
+    "1001": "1101",
+    "1010": "1100",
+    "1011": "0111",
+    "1100": "1011",
+    "1101": "0100",
+    "1110": "0010",
+    "1111": "1000",
+}
+
+constant_matrix = [
+    [1, 4],
+    [4, 1],
+]
+
 
 def substitute_nibbles(plainTextBinary: str) -> list:
     """
     substituting each nibble in the block with a different one
     """
-    # From the given document
-    sBox: dict = {
-        "0000": "1010",
-        "0001": "0000",
-        "0010": "1001",
-        "0011": "1110",
-        "0100": "0110",
-        "0101": "0011",
-        "0110": "1111",
-        "0111": "0101",
-        "1000": "0001",
-        "1001": "1101",
-        "1010": "1100",
-        "1011": "0111",
-        "1100": "1011",
-        "1101": "0100",
-        "1110": "0010",
-        "1111": "1000",
-    }
 
     subNibbles: list[str] = list()
     if len(plainTextBinary) == 4:
@@ -67,11 +73,6 @@ def shift_rows(plainTextBinary: str) -> list:
 def mix_columns(plainTextBinary: str) -> list:
     nibbles = [
         int(plainTextBinary[i : i + 4], 2) for i in range(0, len(plainTextBinary), 4)
-    ]
-
-    constant_matrix = [
-        [1, 4],
-        [4, 1],
     ]
 
     d0 = finite_field_multiply(
