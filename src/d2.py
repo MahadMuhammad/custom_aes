@@ -11,11 +11,20 @@ original block.
 matrix.
 """
 
+from lib import validate_text
+
 
 def main() -> None:
     """
     main function for encryption and decryption
     """
+    cipherText: str = input(
+        "Enter the ciphertext block: (Press enter to use default value)"
+    )
+    if not cipherText:
+        cipherText = "f3d7"
+    # validate the input
+    cipherText = validate_text(cipherText, name="ciphertext")
 
 
 if __name__ == "__main__":

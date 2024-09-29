@@ -163,7 +163,7 @@ def bitwise_xor(a, b):
     return result
 
 
-def validate_text(plaintext: str, name: str) -> None:
+def validate_text(plaintext: str, name: str) -> str:
     """
     Validate the plain text input
     """
@@ -176,5 +176,6 @@ def validate_text(plaintext: str, name: str) -> None:
     elif len(plaintext) < 4:
         # Padding the input with zeros
         plaintext = plaintext.ljust(4, "0")
-
     assert len(plaintext) == 4
+
+    return plaintext
