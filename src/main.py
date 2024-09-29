@@ -45,7 +45,7 @@ def main() -> None:
     # Inputting key
     key: str = input("Enter a key: (Press enter to use default value)")
     if not key:
-        key = "2cc"
+        key = "02cc"
     key = validate_text(key, name="key")
 
     keyBinary: str = bin(int(key, 16))[2:].zfill(16)
