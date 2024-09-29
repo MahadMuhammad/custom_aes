@@ -163,25 +163,16 @@ def bitwise_xor(a, b):
     return result
 
 
-# a slite redundancy in the code
-def validate_key(key: str) -> None:
-    if len(key) > 4:
-        raise ValueError("The input should be less than or equal to 4 characters long")
-    elif len(key) < 4:
-        # Padding the input with zeros
-        key = key.ljust(4, "0")
-
-    assert len(key) == 4
-
-
-def validate_plain_text(plaintext: str) -> None:
+def validate_text(plaintext: str, name: str) -> None:
     """
     Validate the plain text input
     """
     # 16 bits of input data
     # See this for more details: https://en.wikipedia.org/wiki/Nibble
     if len(plaintext) > 4:
-        raise ValueError("The input should be less than or equal to 4 characters long")
+        raise ValueError(
+            f"The input {name} should be less than or equal to 4 characters long"
+        )
     elif len(plaintext) < 4:
         # Padding the input with zeros
         plaintext = plaintext.ljust(4, "0")

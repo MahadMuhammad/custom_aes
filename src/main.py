@@ -5,10 +5,9 @@ developed for my Information Security course.
 
 from lib import (
     substitute_nibbles,
-    validate_plain_text,
+    validate_text,
     shift_rows,
     mix_columns,
-    validate_key,
     gen_round_keys,
 )
 
@@ -18,7 +17,7 @@ def main() -> None:
     if not plaintext:
         plaintext = "903b"
 
-    validate_plain_text(plaintext)
+    validate_text(plaintext, name="plaintext")
 
     # initially, we are just printing the things, that are mentioned in the document
     # Convert hex input to binary and remove the '0b' prefix
@@ -47,7 +46,7 @@ def main() -> None:
     key: str = input("Enter a key: (Press enter to use default value)")
     if not key:
         key = "2cc"
-    validate_key(key)
+    validate_text(key, name="key")
 
     keyBinary: str = bin(int(key, 16))[2:].zfill(16)
     roundK1, roundK2 = gen_round_keys(keyBinary)
