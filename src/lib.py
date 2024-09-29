@@ -157,7 +157,7 @@ def bitwise_xor(a, b):
         raise ValueError("strings must have the same length for XOR operation")
 
     result = str()
-    for bit1, bit2 in zip(a, b):
+    for bit1, bit2 in zip(a, b, strict=True):
         result += "1" if bit1 != bit2 else "0"
 
     return result
