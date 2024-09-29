@@ -14,7 +14,10 @@ from lib import (
 
 
 def main() -> None:
-    plaintext: str = input("Enter the plaintext: ")
+    plaintext: str = input("Enter the plaintext: (Press enter to use default value)")
+    if not plaintext:
+        plaintext = "903b"
+
     validate_plain_text(plaintext)
 
     # initially, we are just printing the things, that are mentioned in the document
@@ -41,7 +44,9 @@ def main() -> None:
     print(f"MixColumns({plaintext}) = {mixColsString}")
 
     # Inputting key
-    key: str = input("Enter a key: ")
+    key: str = input("Enter a key: (Press enter to use default value)")
+    if not key:
+        key = "2cc"
     validate_key(key)
 
     keyBinary: str = bin(int(key, 16))[2:].zfill(16)
